@@ -1,0 +1,12 @@
+THE HAFNIUM APT SHELL
+CVE 021 26855
+
+
+
+scan the internet by performing GET request to "/owa/[RANDONM].aspx"
+
+dork /owa/auth/logon.aspx
+
+
+e.g: 
+https://102.90.0.219/owa/auth/logon.aspx?replaceCurrent=1&url=https%3a%2f%2f102.90.0.219%2fowa%2f

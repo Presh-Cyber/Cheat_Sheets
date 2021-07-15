@@ -1,0 +1,154 @@
+
+
+
+
+------------------------------------------ FIND AND REPLACE TEXT WITHIN A FILE WITH COMMAND -------------------------------------------------------------------
+
+sed -i 's/original/new/g' file.txt
+Explanation:
+
+sed = Stream EDitor
+-i = in-place (i.e. save back to the original file)
+The command string:
+
+s = the substitute command
+original = a regular expression describing the word to replace (or just the word itself)
+new = the text to replace it with
+g = global (i.e. replace all and not just the first occurrence)
+file.txt = the file name
+
+
+
+
+------------------------------------------------ CHANGE DEFAULT PYTHON VERION FOR LAUNCH ---------------------------------------------------------------------
+
+if it is your first time follow these instruction
+
+
+1. Creating alias in bashrc:
+We can create an alias within user’s home directory and add it to the bashrc. But it will only work for the current user.
+Open the bashrc file by using the following command:
+
+>> nano ~/.bashrc
+
+2. Add the following line to the below of the bashrc file .
+
+>> alias python=‘/usr/bin/python3.7’
+
+3. Now if we use check python version using ‘python -V’, it will return 3.7.2. And if we run the program.py file using ‘python program.py’, then it will be run by python3.5 executable.
+Using update-alternatives:
+To switch between python version over the all users, we can use update-alternatives command.
+We will set priority of each version using update-alternatives. Python executable with the highest priority will be used as default python version.
+We will set the priority by the following commands:
+
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 2
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 3
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.7 4
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 5
+Here I set the priority of python 2.7, 3.5, 3.6, 3.7, 3.8 as 1, 2, 3, 4, 5. As the python3.8 has the highest priority, the default python executable is python3.8 now.
+
+4. To switch between any versions, we can use the following command:
+>> sudo update-alternatives --config python
+
+
+you can simply follow number 1, 2, 4
+and if you've done this before, you can simply follow number 4
+
+
+-------------------------------------------------------------- DISK CLEAN ---------------------------------------------------------------------------------------
+
+apt-get clean : flushes the cache of packages that are to be installed, right? So isn't the worst scenario that can happen is that I have to download the package again?
+
+apt-get autoclean : does the same thing as apt-get clean except it does not remove the cache of the latest version, so it's even "safer" than the worst 
+case scenario of apt-get clean, right?
+
+apt-get autoremove : "removes orphaned packages that were installed as dependencies, but are no longer.
+
+Thanks.
+
+
+
+
+
+--------------How to pipe ls to grep, and delete the files filtered by grep?
+--------------------
+
+Since you're dealing with a list coming to STDIN and rm expects parameters, you need to use xargs.
+
+Thus:
+
+ls | grep chrome | xargs rm
+Should give you what you want.
+
+Note that if you want to delete everything other than the chrome file, you can simply add -v to the grep statement.
+
+Note that, per the other answers to this question, this is probably a bad way of accomplishing what you want to accomplish.
+
+
+
+
+
+
+
+
+-------------------ADD A STRING OR WORD IN BEGININING OF ALL LINES IN A TEXT FILE USING PERL---------------------------------------
+
+You have a file that contains a great number of lines, let's say 183 lines, and I want to add: echo " to the beginning of each line. What is the easiest way to do it?
+
+
+Code:
+cat filename.txt  | perl -ne 'print "echo " . $_' > output.txt
+
+NOTE: "echo " is our string used here.
+
+
+USING SED COMMAND
+
+
+This example shows how to add a character to the beginning of each line using a sed command and bash shell.
+Let's create example file.txt with some text:
+
+add 
+character
+at the
+beginning of
+each line
+Add character at the beginning of each line using sed command. For example to add # in front of each line we can use sed command with following syntax:
+
+$ sed 's/^/#/' file.txt
+#add
+#character
+#at the
+#beginning of
+#each line
+replace # with ' ' ( space ) to add space in front of each line:
+
+$ sed 's/^/ /' file.txt
+ add
+ character
+ at the
+ beginning of
+ each line
+Redirect the output produced by sed command to save it to a file:
+
+$ sed 's/^/ /' file.txt  > new-file.txt
+$ cat new-file.txt
+ add
+ character
+ at the
+ beginning of
+ each line
+
+
+
+------------------------------------------ QUICK COMMANDS --------------------------------------------
+
+ls -d */    - list all directories in a directory
+
+ls -f */     - list all files
+ls -f /home  - list all files on the home directory
+
+ls -l */     - list all files and their permission levels in a directory.
+
+shift+ctrl+f   - find a string in the displayed strings on terminal.

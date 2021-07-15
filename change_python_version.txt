@@ -1,0 +1,54 @@
+WORKED ON MAC, AND LINUX
+
+Check the location of python 3
+
+$ which python3
+/usr/local/bin/python3
+Write alias in bash_profile
+
+vi ~/.bash_profile  
+alias python='/usr/local/bin/python3'
+Reload bash_profile
+
+source ~/.bash_profile
+Confirm python command
+
+$ python --version
+Python 3.6.5
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+if it is your first time follow these instruction
+
+
+1. Creating alias in bashrc:
+We can create an alias within user’s home directory and add it to the bashrc. But it will only work for the current user.
+Open the bashrc file by using the following command:
+
+>> nano ~/.bashrc
+
+2. Add the following line to the below of the bashrc file .
+
+>> alias python=‘/usr/bin/python3.7’
+
+3. Now if we use check python version using ‘python -V’, it will return 3.7.2. And if we run the program.py file using ‘python program.py’, then it will be run by python3.5 executable.
+Using update-alternatives:
+To switch between python version over the all users, we can use update-alternatives command.
+We will set priority of each version using update-alternatives. Python executable with the highest priority will be used as default python version.
+We will set the priority by the following commands:
+
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 2
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 3
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.7 4
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 5
+Here I set the priority of python 2.7, 3.5, 3.6, 3.7, 3.8 as 1, 2, 3, 4, 5. As the python3.8 has the highest priority, the default python executable is python3.8 now.
+
+4. To switch between any versions, we can use the following command:
+>> sudo update-alternatives --config python
+
+
+you can simply follow number 1, 2, 4
+and if you've done this before, you can simply follow number 4

@@ -1,0 +1,73 @@
+Techniques
+- creativity, persistence, patience, curiosity
+- have strategies ready on how to improvise, adapt and overcome
+- never assume
+- lateral enumeration (know when to move on or jump back and forth, prevents rabbit holes)
+- MOVE ON: brute force 5 min, exploit technique 20 min 
+- research ability
+- understand common/expected processes/services on machines to spot anomalies 
+- repetition & practice & INTUITION to root\system im talking 120+ boxes
+- low hanging fruit (port 21, 80 , 445, "unusual ports like abyss?")
+- research all platforms and versions found
+- web apps last - look at debugger files first, manipulating cookies and search bars hover over directories
+- try the simple stuff first (misconfigurations, default creds (lazy admins), changing passwords, weak permissions)
+- (local) if enum scripts/manual searches are empty refer to original attack vector
+- develop trusted methodology (no service or technology will be the same, must learn to adapt and use same strategy)
+- look for shared folders/drives/repositories/containers between HTTP/SMB/Git and containers
+- enumerate first, all avenues of possibilities and things of interest, before exploiation. collect all informaion first
+- do not get used to a certain style of box, CTF-y and finding specific puzzles to privesc 
+- Domain Names (both external and internal)
+- Check every single port if it really hosts the service you are thinking
+- Don't make any asumptions on services and versions
+- Specific IPs reachable by internet and unreachable outside the local network/box/environment (pivoting)
+- Access control mechanisms, System architectures,Intrusion detection systems
+- local enumeration of the system (user and group names, logs, system banners, routing tables, SNMP information)
+
+
+
+
+
+
+
+Box Enumeration Results (user/footholds/pivoting before root/admin)
+- year of the pig
+- usernames via SMB, brute force website, search bar sanitizes input and encodes with base64 shown via HTTP headers, encode shell with base64 and send with repeater through JSON value for initial access
+- nmap full scan finds IIS webserver port 49663 with same directory as SMB share, they have common link + SMB is writiable leads to aspx webshell
+- ftp server with anonymous login has binary creds file, convert to ASCII and/or unpickle contents of file and format with python leads to initial foothold, lateral movement from ps aux finds user python file to copy and decode with uncompyle6, file has SWX (7321) creds to copy user SSH keys
+- nmap reveals JSONP endpoints, a type of XSS attack that doesnt verify requests, with dirsearch finding login.js page indicating login bypass by setting cooking to SessionToken. Spoofing cookie from login.js page reveals SSH key and username, cracked with ssh2john
+- enum reveals domain controller running kerberos/ldap, usernames found on webserver & kerbrute validates 3/6. SMB required password brute force with custom wordlist using cewl and smbpasswd to change. SMB lists 2 specific shares associated with printers. MSRPC enumdomusers reveals service printer account and enumprinters reveals account password for evil-winrm.
+- dirsearch reveals /content with specific webserver platform name. searchsploit platform reveals method of obtaining creds in .sql file, crack hashed password for login. PHP Code execution in Ads subsection for reverse shell
+- dirsearch shows /panel and /uploads for file upload bypass with PHP file. PHP files blocked but similar PHTML files allowed for reverse shell. 
+- SMB enum finds .exe in unique share, nmap finds webserver on port 31337 accepting unauthorized input, testing with nc confirms, analyzing exe wih immunity debug reveals buffer overflow (offset, bad chars, JMP ESP, msfvenom shellcode) for user shell
+- FTP server contains .exe and .dll to be extracted and analyzed for buffer overflow system shell
+- dirsearch finds /bin directory with .exe to analyze with immunity debug for user shell
+- wpscan for valid admin username, brute force with rockyou and edit website 404.php theme for initial shell, enum shows local port 8080 running with user creds found in /opt for SSH tunnel, docker escape with brute forcing local webserver and shell with javascript console
+- subversion port 3690 with website revision repo, repo contains alt domain name and .db file with usernames, svn checkout revision 2 for powershell file with website creds, clone repo in Azure DevOps for aspx shell and commit to new domain for initial shell, lateral movement from winPEAS showing mounted W: drive with svn repos, conf directory contains password (valid username in \Users)
+- answer to password reset question in fake employee picture filename, platform found on site with CVE, SMB with creds has .deb of platform, CVE explains to capture user hash with responder by locally running .deb using creds and domain, injecting XSS payload, crack hash for evil-winrm
+- nmap full/UDP scan shows SNMP 161, onesixtyone for community string to use with snmp-check shows username, brute force smb with rockyou for password to use with evil-winrm 
+- enum shows likely domain controller with DNS/LDAP/KER, dig shows unsecured dynamic DNS updates to impersonate server, dirsearch finds .pfx certificate & pfx2john extracts password, openssl extracts contents and impersonates key/cert, nsupdate to add DNS record, responder to capture user hash for web powershell console 
+- python website icon reveals /account directory that points to /search source code which uses encoded_cookie deserialized with python, initial shell with PoC edited to decode UTF-8 and send GET request with shell cookie, escape docker by SSH tunnel to brute force SSH on host using website usernames
+- SQL injection through dev tools cookie value to write hex encoded cmd PHP shell to website directory, download PHP reverse shell wih cmd for initial access, lateral movement to user with forensic analysis log containing plaintext SSH password
+- hidden web directory with write permissions, upload PHP shell
+- webserver on port 8080, platform & version CVE, public exploit upload nc executable
+- union based SQLi to username and hashed password
+- webserver port 8080 with default creds, command injection with powershell
+- sensitive data (creds) found on SMB samba server, login to webserver to find platform & version CVE for LFI and reverse PHP shell
+- FTP platform & version number revealed from searchsploit to download and mount file system for ssh keys
+- SMB share w/ AD usernames, lateral movement by pivoting with TGT hashes/unique RPC password permissions, download another share with LSASS dumped hashes to pass the hash with evil-winrm
+- port 8080 home webpage displays platform & version CVE for system escalation RCE with PHP reverse shell through command injection
+- brute forcing webserver admin account with hydra http-post-form (login page, request body, error message) leads to platform & version for file upload (shell)
+- showmount port 2049 NFS reveals website backup folder with mount permissions, contents reveal platform & version CVE that needs creds, creds found via strings in .sdf binary database
+- default nmap scripts reveal eternalblue exploit, found public script
+- contact page on home webpage reveals platform & version CVE for public script. unstable shell so send cmd with nc
+- blog on webpage reveals a poem that alludes to a popular culture character, syntax revealed on other post and password on /robots.txt
+- platform found and version found from searching where its located, leads to CVE for SQLi leads to creds
+- creds found via hacked social media in pastebin, brute force pop3 with hydra for valid account, find 2 messages with temp password, one account valid
+- dirsearch reveals platform & CVE (authenticated), googling leads to default creds, specific platform tool & nullbyte article how to get a shell, can upload any file with curl, PHP reverse shell
+- wordpress server, bruteforce with wpscan for user creds, privesc with searchsploit wordpress privesc for profile update with ure_other_roles=admininstrator
+- website wih .pcap file, multiple connections from client, knock ports with knock && nmap, knock again for now open port leads to hidden directory, repeats process for hidden message with next port numbers spaced??, repeat process leads to knock && ssh revealing creds, ssh creds /bin/sh
+- unique subdirectory with LFI prereqs, new technique requires keyword to read, attempting to read system file appends with .php extension and include() function leads to PHP filter LFI to decode source code which reveals way to read system files and log poisoning to upload shell
+- wordpress server wpscan bruteforce for creds, edit obscure PHP extension for PHP reverse shell
+- webserver platform & version number reveal CVE SQLi public python script that returns hash with salt
+- dirsearch webserver reveal sitemap subdirectory with hidden ssh folder with id_rsa keys, username found in homepage source code
+- webserver platform & version leads to CVE reverse shell

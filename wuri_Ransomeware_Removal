@@ -1,0 +1,18 @@
+
+Boot into windows safe mode or safe boot.
+
+ctrl+R
+msconfig
+
+after that go to control panel> files and folder options >
+and turn all hidden folders to be visible.
+
+navigate to the directory below to confirm the attacker has no ip address
+attached to the system to flag them of your current status.
+
+/C:/windows/system32/drivers/etc/hosts
+
+clear all suspicious hosts and ip addresses
+
+now clear all suspicious files on the windows startup 
+C:\Users\[User Name]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup

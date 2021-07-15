@@ -1,0 +1,26 @@
+
+
+1.(A quick tip for anyone finding this issue before a newer version fixes things: I got rid of the warnings by downgrading to the latest RubyGems that doesn't have the deprecation warning:)
+┌─[pr3sh@parrot]─[~]
+└──╼ $ gem update --system 3.0.6
+
+-----------At the end of installation you get this--------------
+RubyGems installed the following executables:
+	/usr/bin/gem2.7
+	/usr/bin/bundle2.7
+
+
+2. this installs updates for your ruby
+┌─[pr3sh@parrot]─[~]
+└──╼ apt update && apt install -y  ruby-dev
+
+
+--------------------- DISK CLEAN ---------------------------------------
+
+apt-get clean : flushes the cache of packages that are to be installed, right? So isn't the worst scenario that can happen is that I have to download the package again?
+
+apt-get autoclean : does the same thing as apt-get clean except it does not remove the cache of the latest version, so it's even "safer" than the worst case scenario of apt-get clean, right?
+
+apt-get autoremove : "removes orphaned packages that were installed as dependencies, but are no longer.
+
+Thanks.

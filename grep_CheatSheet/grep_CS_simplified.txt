@@ -1,0 +1,100 @@
+FINDING LINES
+
+show files containing ".txt" in the name
+ls | grep .txt
+
+same as above, case insensitive match
+ls | grep -i .txt
+
+search directory
+grep -r [expression] .
+
+search directory with line numbers
+grep -nr [expression] .
+
+show line numbers
+ls | grep -n [expression]
+
+show [n] lines after any match
+cat [file] | grep [expression] -A [n]
+
+show [n] lines before any match
+cat [file] | grep [expression] -B [n]
+
+don't print matches (scripting)
+grep -q [expression]
+grep --quiet [expression]
+grep --silent [expression]
+
+use this to scan files as text even though grep (mistakenly) thinks they are binary
+grep -a
+grep --text
+
+only show part of line matching pattern
+echo "ignore @show@ ignore" | grep -o "@[a-z]*@"
+
+
+
+FINDING FILES
+
+don't show individual results, count them instead
+ls | grep -c init
+
+stop after finding [n] matches
+ls / | grep [expression] -m [n]
+
+list files with at least one match
+grep -l [expr] *
+
+list files without any matches
+grep -L [expr] *
+
+combine find and grep to find files with file name & contents
+for file in $(find . -name [filename_expr]); do grep -H -l [line_expr] $file; done
+finding files containing two words
+for file in $(ls)
+do
+	grep -q "a" $file && grep -q "b" $file && echo $file
+done
+filtering a list of files multiple times
+files=$(ls)
+files=$(for file in $files; do grep -q "a" $file && echo "$file"; done)
+files=$(for file in $files; do grep -q "b" $file && echo "$file"; done)
+....
+
+
+EXPRESSIONS
+
+find occurrences of the text "blue"
+ls | grep "blue"
+
+find occurrences of the text "blue" OR the text "red"
+ls | grep "blue\|red"
+
+find a literal tab
+ls | grep "\t"
+
+print last column only
+grep -o '\S\+$'
+
+
+
+TRICKS
+
+search for files in jar/zip files
+grep "Socket.*.class" *.jar
+
+
+IMPORTANT COMMAND
+
+For example, if I want to find all form files that start with an "f" and end with .odt, I'll use the regular expression -
+$ "f[[:alnum:]]\.odt"
+
+You need to use find instead of grep in this case.
+You can also use find in combination with grep or egrep:
+
+$ find | grep "f[[:alnum:]]\.odt"
+﻿
+
+
+
